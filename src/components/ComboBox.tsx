@@ -25,10 +25,10 @@ interface ComboboxProps {
 
 const plantCategories = [
   { value: "", label: "None" },
-  { value: "Flower", label: "Flower" },
+  { value: "flower", label: "Flower" },
   { value: "succulent", label: "Succulent" },
-  { value: "Indoor", label: "Indoor Tree" },
-  { value: "Tropical", label: "Tropical" },
+  { value: "indoor", label: "Indoor Tree" },
+  { value: "tropical", label: "Tropical" },
 ];
 
 export function ComboBox({ value, onChange }: ComboboxProps) {

@@ -11,6 +11,7 @@ import { Leaf, Search, SquarePen, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ComboBox } from "./ComboBox";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Plants = {
   id: number;
@@ -33,6 +34,7 @@ interface TableInventoryProps {
 export default function TableInventory({ plants }: TableInventoryProps) {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
 
   const filteredPlants = plants?.filter((plant) => {
     const matchesSearch = plant.name
@@ -118,39 +120,50 @@ export default function TableInventory({ plants }: TableInventoryProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredPlants.map((plant, idx) => (
-                <TableRow key={plant.id}>
-                  <TableCell>{idx + 1}</TableCell>
-                  <TableCell className="font-medium">{plant.name}</TableCell>
-                  <TableCell>{plant.category}</TableCell>
-                  <TableCell>${plant.price}</TableCell>
-                  <TableCell className="font-bold">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        plant.stock > 10
-                          ? "bg-green-100 text-green-800"
-                          : plant.stock > 0
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {plant.stock}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex justify-end space-x-3">
-                      <SquarePen
-                        className="cursor-pointer text-blue-600 hover:text-blue-800 transition-colors"
-                        size={16}
-                      />
-                      <Trash2
-                        className="text-red-500 hover:text-red-700 cursor-pointer transition-colors"
-                        size={16}
-                      />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {filteredPlants.map((plant, idx) => {
+                const slugifiedName = plant.name
+                  .toLowerCase()
+                  .replace(/\s+/g, "-");
+                const slug = `${plant.id}-${slugifiedName}`;
+                const plantUrl = `/plants/${slug}`;
+                return (
+                  <TableRow
+                    key={plant.id}
+                    onClick={() => router.push(plantUrl)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <TableCell>{idx + 1}</TableCell>
+                    <TableCell className="font-medium">{plant.name}</TableCell>
+                    <TableCell>{plant.category}</TableCell>
+                    <TableCell>${plant.price}</TableCell>
+                    <TableCell className="font-bold">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs ${
+                          plant.stock > 10
+                            ? "bg-green-100 text-green-800"
+                            : plant.stock > 0
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {plant.stock}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex justify-end space-x-3">
+                        <SquarePen
+                          className="cursor-pointer text-blue-600 hover:text-blue-800 transition-colors"
+                          size={16}
+                        />
+                        <Trash2
+                          className="text-red-500 hover:text-red-700 cursor-pointer transition-colors"
+                          size={16}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
 
