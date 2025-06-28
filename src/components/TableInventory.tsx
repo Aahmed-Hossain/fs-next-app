@@ -7,11 +7,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Leaf, Search, SquarePen, Trash2 } from "lucide-react";
+import { Leaf, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ComboBox } from "./ComboBox";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ModalAddPlant } from "./ModalAddPlant";
+import { ModalEditPlant } from "./ModalEditPlant";
+import { ModalDeletePlant } from "./ModalDeletePlant";
 
 type Plants = {
   id: number;
@@ -61,6 +64,8 @@ export default function TableInventory({ plants }: TableInventoryProps) {
           value={selectedCategory}
           onChange={(val) => setSelectedCategory(val)}
         />
+
+        <ModalAddPlant />
       </div>
       {plants.length === 0 ? (
         // Empty State - No plants at all
@@ -111,7 +116,7 @@ export default function TableInventory({ plants }: TableInventoryProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Plant ID</TableHead>
+                <TableHead>#</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Price</TableHead>
@@ -150,15 +155,13 @@ export default function TableInventory({ plants }: TableInventoryProps) {
                       </span>
                     </TableCell>
                     <TableCell>
-                      <div className="flex justify-end space-x-3">
-                        <SquarePen
-                          className="cursor-pointer text-blue-600 hover:text-blue-800 transition-colors"
-                          size={16}
-                        />
-                        <Trash2
-                          className="text-red-500 hover:text-red-700 cursor-pointer transition-colors"
-                          size={16}
-                        />
+                      <div
+                        className="flex justify-end space-x-3"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <ModalEditPlant plant={plant} />
+
+                        <ModalDeletePlant plant={plant} />
                       </div>
                     </TableCell>
                   </TableRow>
